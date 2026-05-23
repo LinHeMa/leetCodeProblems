@@ -70,14 +70,93 @@ const reorderList = (head) => {
   }
 
   // Step 3: merge 2 list
+  /**
+   * step 1 (` let first = head; second = node;`): 
+   * first:
+   *  1 -> 2 -> 3
+   * (f)  
+   * 
+   * second:
+   *  4 -> 5 -> 6
+   * (s)  
+   * 
+   * step 2 (`const temp1 = first.next;
+    const temp2 = second.next;`): 
+   * first:
+   *  1 -> 2 -> 3
+   * (f)  (t1)
+   * 
+   * second:
+   *  4 -> 5 -> 6
+   * (s)  (t2)
+   * 
+   * step 3 (`first.next = second; second.next = temp1;`): 
+   * first:
+   *  1 -> 4 -> 2 -> 3   5 -> 6 
+   * (f)  (s)  (t1)     (t2)      
+   *   
+   * 
+   * step 4 (`first = temp1;second = temp2;` 回到first尾巴，second頭): 
+   * first:
+   * 
+   *  1 -> 4 -> 2 -> 3     5 -> 6     
+   *           (t1)       (t2) 
+   *           (f)        (s)
+   * 
+   * step 5 (`const temp1 = first.next; const temp2 = second.next;`): 
+   * first:
+   * 
+   *  1 -> 4 -> 2 -> 3     5 -> 6     
+   *                (t1)       (t2) 
+   *           (f)        (s)
+   * 
+   * step 6 (`first.next = second; second.next = temp1;`): 
+   * first:
+   * 
+   *  1 -> 4 -> 2 -> 5 ->  3    6      
+   *                      (t1) (t2) 
+   *           (f)  (s)     
+   * 
+   * 
+   * step 8 (`first = temp1; second = temp2;`): 
+   * first:
+   * 
+   *  1 -> 4 -> 2 -> 5 ->  3    6      
+   *                      (t1) (t2) 
+   *                      (f)  (s)   
+   * 
+   * step 9 (`const temp1 = first.next;
+    const temp2 = second.next;`): 
+   * first:
+   * 
+   *  1 -> 4 -> 2 -> 5 ->  3 -> null    6 -> null     
+   *                            (t1)         (t2) 
+   *                      (f)          (s)   
+   * 
+   * step 10 (`first.next = second; second.next = temp1.next;`): 
+   * first:
+   * 
+   *  1 -> 4 -> 2 -> 5 ->  3 -> 6 -> null  null         
+   *                                 (t1)   (t2) 
+   *                      (f)  (s)       
+   * step 11 (`const temp1 = first.next;
+    const temp2 = second.next;`): 
+   * first:
+   * 
+   *  1 -> 4 -> 2 -> 5 ->  3 -> 6 -> null   null         
+   *                                 (t1)   (t2) 
+   *                                 (f)    (s)                            
+   */
   let first = head;
   second = node;
   while (second) {
     const temp1 = first.next;
     const temp2 = second.next;
+    // 這段就是要把second接進去 first與temp1之間
     first.next = second;
-    second.next = temp1.next;
+    second.next = temp1;
     first = temp1;
+    // 然後second就會到後半段的頭
     second = temp2;
   }
 };
